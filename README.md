@@ -1,6 +1,3 @@
-# I have an issue with Gradle that blocks me from further developing, it would be very nice of you to help me out! Thanks!
-https://github.com/gradle/gradle/issues/3899
-
 # Spring-Boot-Web-Application
 A web application enables people to book hotel rooms. 
 
