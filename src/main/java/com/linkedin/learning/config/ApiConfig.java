@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-//import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+//import com.fasterxml.jackson.datatype.jdk8;
 
 
 @Configuration
@@ -24,10 +24,11 @@ public class ApiConfig {
 	@Bean
 	public ObjectMapper objectMapper() {
 		//to parse iso-formatted dates
-//		ObjectMapper objectMapper = new ObjectMapper()
+		ObjectMapper objectMapper = new ObjectMapper();
 //			.registerModule(new ParameterNamesMoudul())
 //			.registerModule(new Jdk8Module())
 //			.regsiterModule(new JavaTimeModule());
+//		objectMapper.registerModule(new Jdk8Module());
 		
 		return new ObjectMapper();
 	}

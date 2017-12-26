@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +45,25 @@ public class ReservationResource {
 		return new ResponseEntity<>(new ReservationResponse(), HttpStatus.CREATED);
 	}
 	
+	//pust endpoint--update a existing resource. Exactly like post endpoint, except with a different request method.
+	//Let's add a new public method called update reservation that returns a response entity that contains a empty reservation response in a 200-okay status code.  
+	@RequestMapping(path = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<ReservationResponse> updateReservation(
+			//add a request body annotation to that parameter
+			@RequestBody 
+			ReservationRequest reservationRequest){
+		//return a response entity containing that empty reservation response and the status code created
+		return new ResponseEntity<>(new ReservationResponse(), HttpStatus.OK);
+	}
 	
+	//delete endpoint. 
+	//public method delete reservation that returns a response entity that contains nobody in a 204 no content status code
+	@RequestMapping(path = "/{reservationId}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> deleteReservation(
+			@PathVariable
+			long reservationId){
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 
 }
