@@ -45,7 +45,7 @@ public class ReservationResource {
 		return new ResponseEntity<>(new ReservationResponse(), HttpStatus.CREATED);
 	}
 	
-	//pust endpoint--update a existing resource. Exactly like post endpoint, except with a different request method.
+	//push endpoint--update a existing resource. Exactly like post endpoint, except with a different request method.
 	//Let's add a new public method called update reservation that returns a response entity that contains a empty reservation response in a 200-okay status code.  
 	@RequestMapping(path = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<ReservationResponse> updateReservation(
