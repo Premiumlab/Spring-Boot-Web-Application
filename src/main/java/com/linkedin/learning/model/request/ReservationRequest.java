@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 /*create reservation request, it is a class that represent the request body which is sent during a post*/
 public class ReservationRequest {
 	private Long id;
+	private Long roomId;
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate checkin;
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -16,13 +17,21 @@ public class ReservationRequest {
 		super();
 	}
 	
-	public ReservationRequest(Long id, LocalDate checkin, LocalDate chekout) {
+	public ReservationRequest(Long roomId, LocalDate checkin, LocalDate chekout) {
 		super();
-		this.id = id;
+		this.roomId = roomId;
 		this.checkin = checkin;
 		this.chekout = chekout;
 	}
-	
+
+	public Long getRoomId() {
+		return roomId;
+	}
+
+	public void setRoomId(Long roomId) {
+		this.roomId = roomId;
+	}
+
 	public Long getId() {
 		return id;
 	}

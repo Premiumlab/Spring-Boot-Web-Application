@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,13 +18,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.linkedin.learning.entity.ReservationEntity;
 import com.linkedin.learning.entity.RoomEntity;
 import com.linkedin.learning.model.request.ReservationRequest;
+import com.linkedin.learning.model.response.ReservableRoomResponse;
 import com.linkedin.learning.model.response.ReservationResponse;
 import com.linkedin.learning.repository.PageableRoomRepository;
+import com.linkedin.learning.repository.ReservationRepository;
 import com.linkedin.learning.repository.RoomRepository;
 
-import convertor.RoomEntityToReservationResponseConverter;
+import convertor.RoomEntityToReservableRoomResponseConverter;
 
 @RestController
 @RequestMapping(ResourceConstants.ROOM_RESERVATION_V1)
@@ -35,8 +39,14 @@ public class ReservationResource {
 	@Autowired
 	RoomRepository roomRepository;
 	
+	@Autowired
+	ReservationRepository reservationRepository;
+	
+	@Autowired
+	ConversionService conversionService;
+	
 	@RequestMapping(path = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public Page<ReservationResponse> getAvailableRooms(
+	public Page<ReservableRoomResponse> getAvailableRooms(
 			@RequestParam(value = "checkin")
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 			LocalDate checkin, 
@@ -47,15 +57,15 @@ public class ReservationResource {
 		Page<RoomEntity> roomEntityList = pageableRoomRepository.findAll(pageable);
 		
 		
-		return roomEntityList.map(new RoomEntityToReservationResponseConverter());
+		return roomEntityList.map(new RoomEntityToReservableRoomResponseConverter());
 	}
 	
 	@RequestMapping(path = "/{roomId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<List<RoomEntity>> getRoomById(
+	public ResponseEntity<RoomEntity> getRoomById(
 			@PathVariable
 			Long roomId) {
 		
-		List<RoomEntity> roomEntity = roomRepository.findById(roomId);
+		RoomEntity roomEntity = roomRepository.findById(roomId);
 		
 		return new ResponseEntity<>(roomEntity, HttpStatus.OK);
 		
@@ -69,19 +79,31 @@ public class ReservationResource {
 			//add a request body annotation to that parameter
 			@RequestBody 
 			ReservationRequest reservationRequest){
+		
+		ReservationEntity reservationEntity = conversionService.convert(reservationRequest, ReservationEntity.class);
+		reservationRepository.save(reservationEntity);
+		
+        RoomEntity roomEntity = roomRepository.findById(reservationRequest.getRoomId());
+        roomEntity.addReservationEntity(reservationEntity);
+        roomRepository.save(roomEntity);
+        reservationEntity.setRoomEntity(roomEntity);
+
+        ReservationResponse reservationResponse =
+                conversionService.convert(reservationEntity, ReservationResponse.class);
+
 		//return a response entity containing that empty reservation response and the status code created
-		return new ResponseEntity<>(new ReservationResponse(), HttpStatus.CREATED);
+		return new ResponseEntity<>(reservationResponse, HttpStatus.CREATED);
 	}
 	
 	//push endpoint--update a existing resource. Exactly like post endpoint, except with a different request method.
 	//Let's add a new public method called update reservation that returns a response entity that contains a empty reservation response in a 200-okay status code.  
 	@RequestMapping(path = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<ReservationResponse> updateReservation(
+	public ResponseEntity<ReservableRoomResponse> updateReservation(
 			//add a request body annotation to that parameter
 			@RequestBody 
 			ReservationRequest reservationRequest){
 		//return a response entity containing that empty reservation response and the status code created
-		return new ResponseEntity<>(new ReservationResponse(), HttpStatus.OK);
+		return new ResponseEntity<>(new ReservableRoomResponse(), HttpStatus.OK);
 	}
 	
 	//delete endpoint. 
