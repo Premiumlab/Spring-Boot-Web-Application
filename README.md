@@ -8,7 +8,6 @@ This project builds rest APIs with Java and Spring Boot and responsive front end
 * Check for available rooms based on a check-in and check-out date.
 * Create a new room reservation.
 * Delete a room reservation.
-* ...
 
 ## Technical Implementation
 ### Create Spring Boot Blueprint
@@ -17,13 +16,10 @@ This project builds rest APIs with Java and Spring Boot and responsive front end
 * Test endpoints using the Postman client
 ### Build a Mobile Responsive UI
 * Style components in Angular 2
-* ...
 ### Create the Data Layer with Spring Data
 * Implement persisting layer with Spring JPA
-* ...
 ### Client-Side Functionality with Angular
 * Implement REST API request
-* ...
 ### Testing and Validation
 * Server-side data validation with Spring MVC
 * Unit testing example with REST Assured
